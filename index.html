@@ -3,163 +3,535 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="QUIK CONVERTER: A high-precision, Web 3.0 unit conversion engine. Convert Length, Weight, Temperature, Volume, and Digital Storage with historical and scientific context.">
-    <meta name="keywords" content="unit converter, scientific calculator, glassmorphism, metric conversion, imperial conversion, digital storage calculator">
-    <title>QUIK CONVERTER | Precision Web 3.0 Engine</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <title>Quik Converter | Smart Workspace</title>
+    <style>
+        /* --- CSS VARIABLES & THEME --- */
+        :root {
+            --primary: #2563eb; /* Strong Blue */
+            --primary-hover: #1d4ed8;
+            --bg: #f8f9fa;
+            --surface: #ffffff;
+            --text: #333333;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --accent-green: #10b981;
+        }
 
-    <div class="bg-orb orb-1"></div>
-    <div class="bg-orb orb-2"></div>
-    <div class="bg-grid"></div>
+        [data-theme="dark"] {
+            --primary: #3b82f6;
+            --bg: #111827;
+            --surface: #1f2937;
+            --text: #f3f4f6;
+            --text-light: #9ca3af;
+            --border: #374151;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        }
 
-    <div class="glass-container">
+        /* --- GLOBAL RESET --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; transition: background 0.3s, color 0.3s; }
+        body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* --- LAYOUT --- */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; gap: 20px; flex: 1; }
+        .main-content { flex: 3; padding-top: 20px; }
+        .sidebar { flex: 1; background: var(--surface); border-left: 1px solid var(--border); padding: 20px; height: 100vh; position: sticky; top: 0; overflow-y: auto; display: none; }
+        @media(min-width: 1024px) { .sidebar { display: block; } }
+
+        /* --- HEADER --- */
+        header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 15px 0; position: sticky; top: 0; z-index: 100; }
+        .nav-flex { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .logo { font-weight: 800; font-size: 1.5rem; color: var(--primary); text-decoration: none; }
         
-        <header>
-            <div class="logo">
-                <i class="fa-solid fa-atom fa-spin-pulse" style="--fa-animation-duration: 3s;"></i>
-                <span>QUIK<span class="highlight">CONVERTER</span></span>
+        /* Search Bar (Natural Language) */
+        .smart-search { position: relative; width: 400px; }
+        .smart-search input { width: 100%; padding: 10px 15px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; }
+        .smart-search input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); }
+
+        .theme-toggle { cursor: pointer; background: none; border: none; font-size: 1.2rem; color: var(--text); }
+
+        /* --- HERO / EXPRESS CONVERTER --- */
+        .express-section { background: var(--surface); border-radius: 12px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 30px; }
+        
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+        .tab { padding: 8px 16px; background: var(--bg); border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.9rem; color: var(--text-light); white-space: nowrap; }
+        .tab.active { background: var(--primary); color: white; }
+
+        .converter-ui { display: flex; flex-direction: column; gap: 20px; }
+        .input-group { display: grid; grid-template-columns: 1fr auto 1fr; gap: 15px; align-items: center; }
+        
+        input[type="number"], select { padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 1rem; width: 100%; }
+        
+        .swap-btn { background: var(--bg); border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; cursor: pointer; color: var(--primary); display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
+        .swap-btn:hover { transform: rotate(180deg); background: var(--border); }
+
+        .result-area { background: var(--bg); padding: 20px; border-radius: 8px; text-align: center; margin-top: 10px; border: 1px solid var(--border); }
+        .result-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+        .result-context { margin-top: 10px; font-size: 0.9rem; color: var(--text-light); font-style: italic; }
+        
+        /* Copy Buttons */
+        .copy-actions { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
+        .copy-btn { padding: 5px 10px; font-size: 0.8rem; border: 1px solid var(--border); background: var(--surface); cursor: pointer; border-radius: 4px; color: var(--text); }
+        .copy-btn:hover { background: var(--bg); }
+
+        /* --- CATEGORY GRID --- */
+        .grid-title { margin-bottom: 15px; font-size: 1.2rem; }
+        .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-bottom: 40px; }
+        .cat-card { background: var(--surface); padding: 20px; border-radius: 8px; border: 1px solid var(--border); text-align: center; cursor: pointer; transition: transform 0.2s; }
+        .cat-card:hover { transform: translateY(-3px); border-color: var(--primary); }
+        .cat-icon { font-size: 1.5rem; margin-bottom: 10px; display: block; }
+
+        /* --- SIDEBAR (HISTORY) --- */
+        .sidebar h3 { margin-bottom: 15px; font-size: 1.1rem; }
+        .history-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .history-item { background: var(--bg); padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary); cursor: pointer; font-size: 0.9rem; }
+        .history-item:hover { background: var(--border); }
+        .history-meta { font-size: 0.75rem; color: var(--text-light); display: block; margin-top: 4px; }
+
+        /* --- FOOTER --- */
+        footer { background: var(--surface); border-top: 1px solid var(--border); padding: 20px; text-align: center; margin-top: auto; color: var(--text-light); font-size: 0.9rem; }
+
+        @media(max-width: 768px) {
+            .input-group { grid-template-columns: 1fr; }
+            .swap-btn { margin: 0 auto; transform: rotate(90deg); }
+            .swap-btn:hover { transform: rotate(270deg); }
+            .smart-search { width: 100%; display: none; /* Hide generic search on mobile for simplicity */ }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <header>
+        <div class="nav-flex">
+            <a href="#" class="logo">Quik Converter</a>
+            
+            <div class="smart-search">
+                <input type="text" id="smartSearch" placeholder="Type '100 km to miles' or '50c to f'...">
             </div>
-            <nav>
-                <button id="theme-toggle" class="nav-btn" aria-label="Toggle Dark Mode">
-                    <i class="fa-solid fa-sun"></i>
-                </button>
-            </nav>
-        </header>
 
-        <main>
-            <div class="converter-card">
-                <div class="tabs" role="tablist">
-                    <button class="tab-btn active" data-category="length"><i class="fa-solid fa-ruler"></i> Length</button>
-                    <button class="tab-btn" data-category="weight"><i class="fa-solid fa-weight-hanging"></i> Weight</button>
-                    <button class="tab-btn" data-category="temperature"><i class="fa-solid fa-temperature-three-quarters"></i> Temp</button>
-                    <button class="tab-btn" data-category="volume"><i class="fa-solid fa-flask"></i> Volume</button>
-                    <button class="tab-btn" data-category="digital"><i class="fa-solid fa-hard-drive"></i> Data</button>
-                    <button class="tab-btn" data-category="area"><i class="fa-solid fa-vector-square"></i> Area</button>
-                    <button class="tab-btn" data-category="speed"><i class="fa-solid fa-gauge-high"></i> Speed</button>
-                    <button class="tab-btn" data-category="time"><i class="fa-solid fa-clock"></i> Time</button>
-                </div>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <button class="theme-toggle" id="themeBtn">🌙</button>
+            </div>
+        </div>
+    </header>
 
-                <div class="input-group">
-                    <div class="input-block">
-                        <label for="input-value">Input</label>
-                        <input type="number" id="input-value" placeholder="0.00" value="1" step="any">
-                        <select id="unit-from"></select>
+    <div class="container">
+        <main class="main-content">
+            
+            <div class="express-section">
+                <div class="tabs" id="categoryTabs">
                     </div>
-                    
-                    <button id="swap-btn" class="glow-btn" aria-label="Swap Units">
-                        <i class="fa-solid fa-arrow-right-arrow-left"></i>
-                    </button>
-                    
-                    <div class="input-block">
-                        <label for="output-value">Result</label>
-                        <input type="number" id="output-value" readonly placeholder="0.00">
-                        <select id="unit-to"></select>
+
+                <div class="converter-ui">
+                    <div class="input-group">
+                        <div>
+                            <label style="font-size: 0.8rem; color: var(--text-light);">Amount</label>
+                            <input type="number" id="inputVal" value="1" placeholder="Enter value">
+                        </div>
+                        
+                        <button class="swap-btn" id="swapBtn" title="Swap Units">⇄</button>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%;">
+                            <div>
+                                <label style="font-size: 0.8rem; color: var(--text-light);">From</label>
+                                <select id="fromUnit"></select>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.8rem; color: var(--text-light);">To</label>
+                                <select id="toUnit"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="result-area">
+                        <div class="result-value" id="resultDisplay">---</div>
+                        <div class="result-context" id="contextDisplay"></div>
+                        
+                        <div class="copy-actions">
+                            <button class="copy-btn" onclick="copyResult('text')">Copy Text</button>
+                            <button class="copy-btn" onclick="copyResult('json')">Copy JSON</button>
+                            <button class="copy-btn" onclick="copyResult('eq')">Copy Equation</button>
+                        </div>
                     </div>
                 </div>
-
-                <div class="result-display">
-                    <span id="result-text">1 Meter = 3.28084 Feet</span>
-                </div>
             </div>
 
-            <div class="ad-slot">
-                <p class="ad-label">Sponsored</p>
-                <div class="ad-box">
-                    <span style="font-family: var(--font-display); opacity: 0.5;">AD SPACE [728x90]</span>
+            <h2 class="grid-title">All Converters</h2>
+            <div class="category-grid" id="gridContainer">
                 </div>
-            </div>
 
-            <section class="content-hub">
-                
-                <article id="info-length" class="info-card active-article">
-                    <h3><i class="fa-solid fa-book-open"></i> The Evolution of Linear Measurement</h3>
-                    <p>From the <strong>Sumerian Cubit</strong> to the modern <strong>SI Meter</strong>, the history of length is the history of precision. The cubit, defined as the distance from the elbow to the middle finger (approx. 457mm), built the Pyramids but failed in global trade due to biological variance.</p>
-                    <p>In 1793, the French Republic redefined the meter as $1/10,000,000$ of the distance from the Equator to the North Pole. Today, we have transcended the Earth itself: since 1983, the meter is defined by the speed of light in a vacuum ($c \approx 299,792,458 m/s$), ensuring a universal constant that applies on Mars as accurately as it does in Paris.</p>
-                </article>
-
-                <article id="info-weight" class="info-card">
-                    <h3><i class="fa-solid fa-scale-balanced"></i> Mass vs. Weight: A Physics Primer</h3>
-                    <p>In colloquial terms, we use "Kilogram" and "Pound" interchangeably. In physics, this is a fundamental error. <strong>Mass</strong> (kg) is a measure of inertia—the quantity of matter. <strong>Weight</strong> (lb) is a measure of force ($F=ma$), dependent on gravity.</p>
-                    <p>On Earth, a 10kg mass weighs 98 Newtons (or ~22 lbs). On the Moon, that same 10kg mass weighs only 16 Newtons (~3.6 lbs). QUIK CONVERTER assumes standard Earth gravity ($g = 9.80665 m/s^2$) for all force-mass translations.</p>
-                </article>
-
-                <article id="info-temperature" class="info-card">
-                    <h3><i class="fa-solid fa-fire-burner"></i> Thermodynamics & The Zero Point</h3>
-                    <p>Temperature scales differ not just in increment, but in origin. <strong>Celsius</strong> is anchored to the phase changes of water (0°C freeze, 100°C boil). <strong>Fahrenheit</strong>, older and more capricious, was originally anchored to a brine mixture (0°F) and human blood heat.</p>
-                    <p>The <strong>Kelvin</strong> scale, however, is absolute. 0K is the point of zero thermal energy. The conversion formula $K = C + 273.15$ is essential for cryogenic research and astrophysics.</p>
-                </article>
-                
-                <article id="info-volume" class="info-card">
-                    <h3><i class="fa-solid fa-cube"></i> Volumetric Standards in Industry</h3>
-                    <p>Volume conversions are plagued by the dichotomy between US Customary and Imperial units. A "Gallon" in the US (3.78 Liters) is significantly smaller than an Imperial Gallon (4.54 Liters). This discrepancy has historically caused errors in international logistics and engineering. QUIK CONVERTER explicitly differentiates between US and UK liquid measures to ensure safety.</p>
-                </article>
-
-                <article id="info-digital" class="info-card">
-                    <h3><i class="fa-solid fa-server"></i> The Binary vs. Decimal Gigabyte</h3>
-                    <p>Why does a 1TB hard drive appear as 931GB on your computer? The hard drive industry uses <strong>Decimal</strong> (SI) prefixes: $1 Terabyte = 10^{12} bytes$. Operating systems often use <strong>Binary</strong> (IEC) prefixes: $1 Tebibyte = 2^{40} bytes$.</p>
-                    <p>Because $2^{40} > 10^{12}$, the drive appears "smaller" to the OS. This tool provides precision conversions for both standards.</p>
-                </article>
-
-                <article id="info-area" class="info-card">
-                    <h3><i class="fa-solid fa-map"></i> Spatial Measurement</h3>
-                    <p>From the <strong>Acre</strong> (originally the amount of land a yoke of oxen could plow in one day) to the <strong>Hectare</strong> (10,000 square meters), area units are deeply rooted in agriculture. In real estate and urban planning, precise conversion between Square Feet and Square Meters is the primary currency of valuation.</p>
-                </article>
-
-                <article id="info-speed" class="info-card">
-                    <h3><i class="fa-solid fa-jet-fighter"></i> Velocity: Knots, Mach, and MPH</h3>
-                    <p>Speed measures distance over time. The <strong>Knot</strong> (nautical mile per hour) remains the standard for maritime and aviation navigation because one knot corresponds to one minute of latitude on the globe. <strong>Mach</strong> numbers measure speed relative to the speed of sound, a variable dependent on air density and temperature.</p>
-                </article>
-
-                <article id="info-time" class="info-card">
-                    <h3><i class="fa-solid fa-hourglass-half"></i> Chronometry</h3>
-                    <p>Time is the only unit that uses a Sexagesimal (base-60) system, a legacy of Ancient Babylonian astronomy. While we divide days into 24 hours, and hours into 60 minutes, scientific calculations often require decimal time or conversion to total seconds for integration into physics equations.</p>
-                </article>
-            </section>
         </main>
 
-        <footer>
-            <div class="legal-links">
-                <a href="#privacy" onclick="toggleModal('privacy-modal')">Privacy Policy</a>
-                <a href="#terms" onclick="toggleModal('terms-modal')">Terms of Service</a>
-                <a href="#contact">Contact</a>
+        <aside class="sidebar">
+            <h3>Recent Conversions</h3>
+            <ul class="history-list" id="historyList">
+                </ul>
+            
+            <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
+            
+            <h3>Developer Tools</h3>
+            <div class="category-grid" style="grid-template-columns: 1fr;">
+                <div class="cat-card" onclick="setCategory('data')">💾 Byte Converter</div>
+                <div class="cat-card" onclick="setCategory('pixel')">🎨 Px to REM</div>
             </div>
-            <p>&copy; 2025 QUIK CONVERTER. Licensed under MIT for Educational Use.</p>
-        </footer>
+        </aside>
     </div>
 
-    <div id="privacy-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="toggleModal('privacy-modal')">&times;</span>
-            <h2>Privacy Policy</h2>
-            <p><strong>Last Updated:</strong> October 2025</p>
-            <p>QUIK CONVERTER ("we", "our") respects your privacy. This policy outlines how we handle data in compliance with GDPR and CCPA.</p>
-            <h3>1. Data Collection</h3>
-            <p>We collect standard log data (IP address, browser type, timestamp) for server diagnostics. We do not collect Personally Identifiable Information (PII) unless voluntarily submitted via contact forms.</p>
-            <h3>2. Cookies & AdSense</h3>
-            <p>This site uses Google AdSense. Google, as a third-party vendor, uses cookies (specifically the DART cookie) to serve ads based on your visit to this site and other sites on the Internet. Users may opt out of the use of the DART cookie by visiting the Google ad and content network privacy policy.</p>
-        </div>
-    </div>
+    <footer>
+        <p>&copy; 2023 Quik Converter. Designed for efficiency.</p>
+    </footer>
 
-    <div id="terms-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="toggleModal('terms-modal')">&times;</span>
-            <h2>Terms of Service</h2>
-            <h3>1. Usage Disclaimer</h3>
-            <p>The conversions provided by QUIK CONVERTER are for informational and educational purposes only. While we strive for mathematical precision using IEEE 754 standards, we do not guarantee accuracy for mission-critical engineering, medical, or financial applications.</p>
-            <h3>2. Intellectual Property</h3>
-            <p>The "Glassmorphism" UI code and the educational content modules are proprietary. Unauthorized scraping or replication is prohibited.</p>
-        </div>
-    </div>
+    <script>
+        // --- 1. DATA STRUCTURE ---
+        // A scalable map of categories, units, and conversion factors (normalized to base unit)
+        const DATA = {
+            length: {
+                name: "Length",
+                icon: "📏",
+                base: "m", // meter
+                units: {
+                    m: { name: "Meter", factor: 1 },
+                    km: { name: "Kilometer", factor: 1000 },
+                    cm: { name: "Centimeter", factor: 0.01 },
+                    mm: { name: "Millimeter", factor: 0.001 },
+                    mi: { name: "Mile", factor: 1609.34 },
+                    yd: { name: "Yard", factor: 0.9144 },
+                    ft: { name: "Foot", factor: 0.3048 },
+                    in: { name: "Inch", factor: 0.0254 },
+                    ly: { name: "Light Year", factor: 9.461e15 }
+                }
+            },
+            weight: {
+                name: "Weight",
+                icon: "⚖️",
+                base: "g", // gram
+                units: {
+                    g: { name: "Gram", factor: 1 },
+                    kg: { name: "Kilogram", factor: 1000 },
+                    mg: { name: "Milligram", factor: 0.001 },
+                    lb: { name: "Pound", factor: 453.592 },
+                    oz: { name: "Ounce", factor: 28.3495 }
+                }
+            },
+            volume: {
+                name: "Volume",
+                icon: "💧",
+                base: "l",
+                units: {
+                    l: { name: "Liter", factor: 1 },
+                    ml: { name: "Milliliter", factor: 0.001 },
+                    gal: { name: "Gallon (US)", factor: 3.78541 },
+                    cup: { name: "Cup (US)", factor: 0.236588 }
+                }
+            },
+            temp: {
+                name: "Temperature",
+                icon: "🌡️",
+                isComplex: true, // Requires formulas, not simple factors
+                units: {
+                    c: { name: "Celsius" },
+                    f: { name: "Fahrenheit" },
+                    k: { name: "Kelvin" }
+                }
+            },
+            data: {
+                name: "Data Storage",
+                icon: "💾",
+                base: "b", // bit
+                units: {
+                    b: { name: "Bit", factor: 1 },
+                    B: { name: "Byte", factor: 8 },
+                    KB: { name: "Kilobyte", factor: 8192 },
+                    MB: { name: "Megabyte", factor: 8.389e6 },
+                    GB: { name: "Gigabyte", factor: 8.59e9 },
+                    TB: { name: "Terabyte", factor: 8.796e12 }
+                }
+            },
+            pixel: {
+                name: "Web Layout",
+                icon: "💻",
+                base: "px",
+                units: {
+                    px: { name: "Pixel (Base 16)", factor: 1 },
+                    rem: { name: "REM (Root 16px)", factor: 16 }
+                }
+            }
+        };
 
-    <script src="script.js"></script>
+        // --- 2. STATE MANAGEMENT ---
+        let currentCategory = 'length';
+        let history = JSON.parse(localStorage.getItem('quikHistory')) || [];
+
+        // --- 3. DOM ELEMENTS ---
+        const tabsContainer = document.getElementById('categoryTabs');
+        const fromSelect = document.getElementById('fromUnit');
+        const toSelect = document.getElementById('toUnit');
+        const inputVal = document.getElementById('inputVal');
+        const resultDisplay = document.getElementById('resultDisplay');
+        const contextDisplay = document.getElementById('contextDisplay');
+        const gridContainer = document.getElementById('gridContainer');
+        const themeBtn = document.getElementById('themeBtn');
+        const historyList = document.getElementById('historyList');
+
+        // --- 4. INITIALIZATION ---
+        function init() {
+            renderTabs();
+            renderGrid();
+            renderHistory();
+            setCategory('length');
+            
+            // Event Listeners
+            inputVal.addEventListener('input', calculate);
+            fromSelect.addEventListener('change', calculate);
+            toSelect.addEventListener('change', calculate);
+            document.getElementById('swapBtn').addEventListener('click', swapUnits);
+            
+            // Theme logic
+            if(localStorage.getItem('theme') === 'dark') document.body.dataset.theme = 'dark';
+            themeBtn.addEventListener('click', toggleTheme);
+
+            // Smart Search Listener
+            document.getElementById('smartSearch').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleSearch(e.target.value);
+            });
+        }
+
+        // --- 5. CORE LOGIC ---
+
+        function setCategory(catKey) {
+            currentCategory = catKey;
+            
+            // Update Tabs UI
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            const activeTab = document.querySelector(`.tab[data-key="${catKey}"]`);
+            if(activeTab) activeTab.classList.add('active');
+
+            // Populate Select Dropdowns
+            const catData = DATA[catKey];
+            fromSelect.innerHTML = '';
+            toSelect.innerHTML = '';
+
+            Object.keys(catData.units).forEach(unitKey => {
+                const unit = catData.units[unitKey];
+                const option1 = new Option(unit.name, unitKey);
+                const option2 = new Option(unit.name, unitKey);
+                fromSelect.add(option1);
+                toSelect.add(option2);
+            });
+
+            // Set defaults (first and second items usually)
+            const keys = Object.keys(catData.units);
+            fromSelect.value = keys[0];
+            toSelect.value = keys[1] || keys[0];
+
+            calculate();
+        }
+
+        function calculate() {
+            const val = parseFloat(inputVal.value);
+            const from = fromSelect.value;
+            const to = toSelect.value;
+            const cat = DATA[currentCategory];
+
+            if (isNaN(val)) {
+                resultDisplay.innerText = "---";
+                contextDisplay.innerText = "";
+                return;
+            }
+
+            let result = 0;
+
+            if (cat.isComplex && currentCategory === 'temp') {
+                // Temperature Formulas
+                if(from === to) result = val;
+                else if(from === 'c' && to === 'f') result = (val * 9/5) + 32;
+                else if(from === 'c' && to === 'k') result = val + 273.15;
+                else if(from === 'f' && to === 'c') result = (val - 32) * 5/9;
+                else if(from === 'f' && to === 'k') result = (val - 32) * 5/9 + 273.15;
+                else if(from === 'k' && to === 'c') result = val - 273.15;
+                else if(from === 'k' && to === 'f') result = (val - 273.15) * 9/5 + 32;
+            } else {
+                // Standard Factor Conversion (Base Unit Method)
+                // Value * (FromFactor / ToFactor)
+                const fromFactor = cat.units[from].factor;
+                const toFactor = cat.units[to].factor;
+                result = val * (fromFactor / toFactor);
+            }
+
+            // Formatting logic: Integers vs Decimals
+            const displayRes = Number.isInteger(result) ? result : parseFloat(result.toFixed(4));
+            
+            resultDisplay.innerText = `${displayRes} ${cat.units[to].name}`;
+            
+            // Trigger Visual Context
+            generateContext(displayRes, to, currentCategory);
+
+            // Add to History (Debounced ideally, but simple here)
+            addToHistory(val, from, displayRes, to);
+        }
+
+        // --- 6. VISUAL CONTEXT (The "Aha!" Moment) ---
+        function generateContext(val, unit, type) {
+            let text = "";
+            
+            // Simple heuristic rules
+            if(type === 'length' && unit === 'm') {
+                if(val > 800) text = "🧱 That's nearly the height of the Burj Khalifa!";
+                else if(val > 300) text = "🗼 That's about the height of the Eiffel Tower.";
+                else if(val > 1.9 && val < 2.2) text = "🏋️ You are taller than The Rock (Dwayne Johnson).";
+            } 
+            else if(type === 'weight' && unit === 'kg') {
+                if(val > 5000) text = "🐘 That's about the weight of an African Elephant.";
+                else if(val > 80 && val < 100) text = "💪 Standard heavyweight boxer range.";
+            }
+            else if(type === 'temp' && unit === 'c') {
+                if(val === 100) text = "☕ Water is boiling!";
+                if(val === 0) text = "🧊 Water is freezing.";
+                if(val > 56) text = "🥵 Hottest recorded temperature on Earth.";
+            }
+            else if(type === 'pixel' && unit === 'rem') {
+                text = "🖥️ Standard accessible scaling for web typography.";
+            }
+
+            contextDisplay.innerText = text;
+        }
+
+        // --- 7. UTILITIES ---
+
+        function swapUnits() {
+            const temp = fromSelect.value;
+            fromSelect.value = toSelect.value;
+            toSelect.value = temp;
+            calculate();
+        }
+
+        function renderTabs() {
+            tabsContainer.innerHTML = '';
+            Object.keys(DATA).forEach(key => {
+                const tab = document.createElement('div');
+                tab.className = 'tab';
+                tab.dataset.key = key;
+                tab.innerText = DATA[key].name;
+                tab.onclick = () => setCategory(key);
+                tabsContainer.appendChild(tab);
+            });
+        }
+
+        function renderGrid() {
+            gridContainer.innerHTML = '';
+            Object.keys(DATA).forEach(key => {
+                const card = document.createElement('div');
+                card.className = 'cat-card';
+                card.innerHTML = `<span class="cat-icon">${DATA[key].icon}</span>${DATA[key].name}`;
+                card.onclick = () => {
+                    setCategory(key);
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                };
+                gridContainer.appendChild(card);
+            });
+        }
+
+        function addToHistory(inVal, inUnit, outVal, outUnit) {
+            // Prevent duplicates or empty
+            const entry = `${inVal} ${inUnit} → ${outVal} ${outUnit}`;
+            if (history.length > 0 && history[0].text === entry) return;
+
+            history.unshift({ text: entry, time: new Date().toLocaleTimeString() });
+            if(history.length > 10) history.pop();
+            
+            localStorage.setItem('quikHistory', JSON.stringify(history));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            historyList.innerHTML = '';
+            history.forEach(h => {
+                const li = document.createElement('li');
+                li.className = 'history-item';
+                li.innerHTML = `
+                    <div>${h.text}</div>
+                    <span class="history-meta">${h.time}</span>
+                `;
+                li.onclick = () => {
+                    // Smart restore logic could go here (parsing the string back to inputs)
+                    alert("Restoring from history: " + h.text); 
+                };
+                historyList.appendChild(li);
+            });
+        }
+
+        function handleSearch(query) {
+            // Very basic regex parser for "100 m to km"
+            const regex = /(\d+)\s*(\w+)\s*(?:to|in)\s*(\w+)/i;
+            const match = query.match(regex);
+            
+            if(match) {
+                const amount = match[1];
+                const fromU = match[2].toLowerCase();
+                const toU = match[3].toLowerCase();
+
+                // Find which category these units belong to
+                let foundCat = null;
+                Object.keys(DATA).forEach(catKey => {
+                    const units = Object.keys(DATA[catKey].units);
+                    // Loose check (checking keys, ideally check names too)
+                    if(units.includes(fromU) || units.includes(toU)) foundCat = catKey;
+                });
+
+                if(foundCat) {
+                    setCategory(foundCat);
+                    // Wait for DOM update
+                    setTimeout(() => {
+                        inputVal.value = amount;
+                        // Try to set selects if they exist in the list
+                        if(fromSelect.querySelector(`option[value="${fromU}"]`)) fromSelect.value = fromU;
+                        if(toSelect.querySelector(`option[value="${toU}"]`)) toSelect.value = toU;
+                        calculate();
+                    }, 50);
+                } else {
+                    alert("Could not auto-detect units. Please select a category manually.");
+                }
+            }
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            if(body.dataset.theme === 'dark') {
+                body.dataset.theme = 'light';
+                themeBtn.innerText = '🌙';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.dataset.theme = 'dark';
+                themeBtn.innerText = '☀️';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function copyResult(type) {
+            const val = resultDisplay.innerText;
+            let txt = "";
+            
+            if(type === 'text') txt = val;
+            if(type === 'json') {
+                txt = JSON.stringify({
+                    from: fromSelect.value,
+                    to: toSelect.value,
+                    input: inputVal.value,
+                    result: val
+                });
+            }
+            if(type === 'eq') txt = `${inputVal.value} ${fromSelect.value} = ${val}`;
+
+            navigator.clipboard.writeText(txt).then(() => {
+                const original = resultDisplay.style.color;
+                resultDisplay.style.color = "var(--accent-green)";
+                setTimeout(() => resultDisplay.style.color = original, 500);
+            });
+        }
+
+        // Start
+        init();
+
+    </script>
 </body>
 </html>
