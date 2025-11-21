@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="QUIK CONVERTER: A high-precision, Web 3.0 unit conversion engine. Convert Length, Weight, Temperature, Volume, and Digital Storage with historical and scientific context.">
+    <meta name="keywords" content="unit converter, scientific calculator, glassmorphism, metric conversion, imperial conversion, digital storage calculator">
+    <title>QUIK CONVERTER | Precision Web 3.0 Engine</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;500;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-grid"></div>
+
+    <div class="glass-container">
+        
+        <header>
+            <div class="logo">
+                <i class="fa-solid fa-atom fa-spin-pulse" style="--fa-animation-duration: 3s;"></i>
+                <span>QUIK<span class="highlight">CONVERTER</span></span>
+            </div>
+            <nav>
+                <button id="theme-toggle" class="nav-btn" aria-label="Toggle Dark Mode">
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+            </nav>
+        </header>
+
+        <main>
+            <div class="converter-card">
+                <div class="tabs" role="tablist">
+                    <button class="tab-btn active" data-category="length"><i class="fa-solid fa-ruler"></i> Length</button>
+                    <button class="tab-btn" data-category="weight"><i class="fa-solid fa-weight-hanging"></i> Weight</button>
+                    <button class="tab-btn" data-category="temperature"><i class="fa-solid fa-temperature-three-quarters"></i> Temp</button>
+                    <button class="tab-btn" data-category="volume"><i class="fa-solid fa-flask"></i> Volume</button>
+                    <button class="tab-btn" data-category="digital"><i class="fa-solid fa-hard-drive"></i> Data</button>
+                    <button class="tab-btn" data-category="area"><i class="fa-solid fa-vector-square"></i> Area</button>
+                    <button class="tab-btn" data-category="speed"><i class="fa-solid fa-gauge-high"></i> Speed</button>
+                    <button class="tab-btn" data-category="time"><i class="fa-solid fa-clock"></i> Time</button>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-block">
+                        <label for="input-value">Input</label>
+                        <input type="number" id="input-value" placeholder="0.00" value="1" step="any">
+                        <select id="unit-from"></select>
+                    </div>
+                    
+                    <button id="swap-btn" class="glow-btn" aria-label="Swap Units">
+                        <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                    </button>
+                    
+                    <div class="input-block">
+                        <label for="output-value">Result</label>
+                        <input type="number" id="output-value" readonly placeholder="0.00">
+                        <select id="unit-to"></select>
+                    </div>
+                </div>
+
+                <div class="result-display">
+                    <span id="result-text">1 Meter = 3.28084 Feet</span>
+                </div>
+            </div>
+
+            <div class="ad-slot">
+                <p class="ad-label">Sponsored</p>
+                <div class="ad-box">
+                    <span style="font-family: var(--font-display); opacity: 0.5;">AD SPACE [728x90]</span>
+                </div>
+            </div>
+
+            <section class="content-hub">
+                
+                <article id="info-length" class="info-card active-article">
+                    <h3><i class="fa-solid fa-book-open"></i> The Evolution of Linear Measurement</h3>
+                    <p>From the <strong>Sumerian Cubit</strong> to the modern <strong>SI Meter</strong>, the history of length is the history of precision. The cubit, defined as the distance from the elbow to the middle finger (approx. 457mm), built the Pyramids but failed in global trade due to biological variance.</p>
+                    <p>In 1793, the French Republic redefined the meter as $1/10,000,000$ of the distance from the Equator to the North Pole. Today, we have transcended the Earth itself: since 1983, the meter is defined by the speed of light in a vacuum ($c \approx 299,792,458 m/s$), ensuring a universal constant that applies on Mars as accurately as it does in Paris.</p>
+                </article>
+
+                <article id="info-weight" class="info-card">
+                    <h3><i class="fa-solid fa-scale-balanced"></i> Mass vs. Weight: A Physics Primer</h3>
+                    <p>In colloquial terms, we use "Kilogram" and "Pound" interchangeably. In physics, this is a fundamental error. <strong>Mass</strong> (kg) is a measure of inertia—the quantity of matter. <strong>Weight</strong> (lb) is a measure of force ($F=ma$), dependent on gravity.</p>
+                    <p>On Earth, a 10kg mass weighs 98 Newtons (or ~22 lbs). On the Moon, that same 10kg mass weighs only 16 Newtons (~3.6 lbs). QUIK CONVERTER assumes standard Earth gravity ($g = 9.80665 m/s^2$) for all force-mass translations.</p>
+                </article>
+
+                <article id="info-temperature" class="info-card">
+                    <h3><i class="fa-solid fa-fire-burner"></i> Thermodynamics & The Zero Point</h3>
+                    <p>Temperature scales differ not just in increment, but in origin. <strong>Celsius</strong> is anchored to the phase changes of water (0°C freeze, 100°C boil). <strong>Fahrenheit</strong>, older and more capricious, was originally anchored to a brine mixture (0°F) and human blood heat.</p>
+                    <p>The <strong>Kelvin</strong> scale, however, is absolute. 0K is the point of zero thermal energy. The conversion formula $K = C + 273.15$ is essential for cryogenic research and astrophysics.</p>
+                </article>
+                
+                <article id="info-volume" class="info-card">
+                    <h3><i class="fa-solid fa-cube"></i> Volumetric Standards in Industry</h3>
+                    <p>Volume conversions are plagued by the dichotomy between US Customary and Imperial units. A "Gallon" in the US (3.78 Liters) is significantly smaller than an Imperial Gallon (4.54 Liters). This discrepancy has historically caused errors in international logistics and engineering. QUIK CONVERTER explicitly differentiates between US and UK liquid measures to ensure safety.</p>
+                </article>
+
+                <article id="info-digital" class="info-card">
+                    <h3><i class="fa-solid fa-server"></i> The Binary vs. Decimal Gigabyte</h3>
+                    <p>Why does a 1TB hard drive appear as 931GB on your computer? The hard drive industry uses <strong>Decimal</strong> (SI) prefixes: $1 Terabyte = 10^{12} bytes$. Operating systems often use <strong>Binary</strong> (IEC) prefixes: $1 Tebibyte = 2^{40} bytes$.</p>
+                    <p>Because $2^{40} > 10^{12}$, the drive appears "smaller" to the OS. This tool provides precision conversions for both standards.</p>
+                </article>
+
+                <article id="info-area" class="info-card">
+                    <h3><i class="fa-solid fa-map"></i> Spatial Measurement</h3>
+                    <p>From the <strong>Acre</strong> (originally the amount of land a yoke of oxen could plow in one day) to the <strong>Hectare</strong> (10,000 square meters), area units are deeply rooted in agriculture. In real estate and urban planning, precise conversion between Square Feet and Square Meters is the primary currency of valuation.</p>
+                </article>
+
+                <article id="info-speed" class="info-card">
+                    <h3><i class="fa-solid fa-jet-fighter"></i> Velocity: Knots, Mach, and MPH</h3>
+                    <p>Speed measures distance over time. The <strong>Knot</strong> (nautical mile per hour) remains the standard for maritime and aviation navigation because one knot corresponds to one minute of latitude on the globe. <strong>Mach</strong> numbers measure speed relative to the speed of sound, a variable dependent on air density and temperature.</p>
+                </article>
+
+                <article id="info-time" class="info-card">
+                    <h3><i class="fa-solid fa-hourglass-half"></i> Chronometry</h3>
+                    <p>Time is the only unit that uses a Sexagesimal (base-60) system, a legacy of Ancient Babylonian astronomy. While we divide days into 24 hours, and hours into 60 minutes, scientific calculations often require decimal time or conversion to total seconds for integration into physics equations.</p>
+                </article>
+            </section>
+        </main>
+
+        <footer>
+            <div class="legal-links">
+                <a href="#privacy" onclick="toggleModal('privacy-modal')">Privacy Policy</a>
+                <a href="#terms" onclick="toggleModal('terms-modal')">Terms of Service</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <p>&copy; 2025 QUIK CONVERTER. Licensed under MIT for Educational Use.</p>
+        </footer>
+    </div>
+
+    <div id="privacy-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="toggleModal('privacy-modal')">&times;</span>
+            <h2>Privacy Policy</h2>
+            <p><strong>Last Updated:</strong> October 2025</p>
+            <p>QUIK CONVERTER ("we", "our") respects your privacy. This policy outlines how we handle data in compliance with GDPR and CCPA.</p>
+            <h3>1. Data Collection</h3>
+            <p>We collect standard log data (IP address, browser type, timestamp) for server diagnostics. We do not collect Personally Identifiable Information (PII) unless voluntarily submitted via contact forms.</p>
+            <h3>2. Cookies & AdSense</h3>
+            <p>This site uses Google AdSense. Google, as a third-party vendor, uses cookies (specifically the DART cookie) to serve ads based on your visit to this site and other sites on the Internet. Users may opt out of the use of the DART cookie by visiting the Google ad and content network privacy policy.</p>
+        </div>
+    </div>
+
+    <div id="terms-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="toggleModal('terms-modal')">&times;</span>
+            <h2>Terms of Service</h2>
+            <h3>1. Usage Disclaimer</h3>
+            <p>The conversions provided by QUIK CONVERTER are for informational and educational purposes only. While we strive for mathematical precision using IEEE 754 standards, we do not guarantee accuracy for mission-critical engineering, medical, or financial applications.</p>
+            <h3>2. Intellectual Property</h3>
+            <p>The "Glassmorphism" UI code and the educational content modules are proprietary. Unauthorized scraping or replication is prohibited.</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
