@@ -3,535 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quik Converter | Smart Workspace</title>
+    <title>QUIK CONVERTER | Web 3.0 Unit Exchange</title>
+    <meta name="description" content="Premium Web 3.0 Unit and Token Converter.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+
     <style>
-        /* --- CSS VARIABLES & THEME --- */
-        :root {
-            --primary: #2563eb; /* Strong Blue */
-            --primary-hover: #1d4ed8;
-            --bg: #f8f9fa;
-            --surface: #ffffff;
-            --text: #333333;
-            --text-light: #6b7280;
-            --border: #e5e7eb;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --accent-green: #10b981;
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0f172a; /* Dark Navy Background */
+            color: #e2e8f0;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            min-height: 100vh;
         }
 
-        [data-theme="dark"] {
-            --primary: #3b82f6;
-            --bg: #111827;
-            --surface: #1f2937;
-            --text: #f3f4f6;
-            --text-light: #9ca3af;
-            --border: #374151;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+        /* Glassmorphism Effect */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
 
-        /* --- GLOBAL RESET --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; transition: background 0.3s, color 0.3s; }
-        body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+        .neon-text {
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
 
-        /* --- LAYOUT --- */
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; gap: 20px; flex: 1; }
-        .main-content { flex: 3; padding-top: 20px; }
-        .sidebar { flex: 1; background: var(--surface); border-left: 1px solid var(--border); padding: 20px; height: 100vh; position: sticky; top: 0; overflow-y: auto; display: none; }
-        @media(min-width: 1024px) { .sidebar { display: block; } }
+        .gradient-text {
+            background: linear-gradient(to right, #38bdf8, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-        /* --- HEADER --- */
-        header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 15px 0; position: sticky; top: 0; z-index: 100; }
-        .nav-flex { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        .logo { font-weight: 800; font-size: 1.5rem; color: var(--primary); text-decoration: none; }
-        
-        /* Search Bar (Natural Language) */
-        .smart-search { position: relative; width: 400px; }
-        .smart-search input { width: 100%; padding: 10px 15px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text); outline: none; }
-        .smart-search input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2); }
-
-        .theme-toggle { cursor: pointer; background: none; border: none; font-size: 1.2rem; color: var(--text); }
-
-        /* --- HERO / EXPRESS CONVERTER --- */
-        .express-section { background: var(--surface); border-radius: 12px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 30px; }
-        
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
-        .tab { padding: 8px 16px; background: var(--bg); border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.9rem; color: var(--text-light); white-space: nowrap; }
-        .tab.active { background: var(--primary); color: white; }
-
-        .converter-ui { display: flex; flex-direction: column; gap: 20px; }
-        .input-group { display: grid; grid-template-columns: 1fr auto 1fr; gap: 15px; align-items: center; }
-        
-        input[type="number"], select { padding: 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--text); font-size: 1rem; width: 100%; }
-        
-        .swap-btn { background: var(--bg); border: 1px solid var(--border); border-radius: 50%; width: 40px; height: 40px; cursor: pointer; color: var(--primary); display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
-        .swap-btn:hover { transform: rotate(180deg); background: var(--border); }
-
-        .result-area { background: var(--bg); padding: 20px; border-radius: 8px; text-align: center; margin-top: 10px; border: 1px solid var(--border); }
-        .result-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
-        .result-context { margin-top: 10px; font-size: 0.9rem; color: var(--text-light); font-style: italic; }
-        
-        /* Copy Buttons */
-        .copy-actions { display: flex; gap: 10px; justify-content: center; margin-top: 15px; }
-        .copy-btn { padding: 5px 10px; font-size: 0.8rem; border: 1px solid var(--border); background: var(--surface); cursor: pointer; border-radius: 4px; color: var(--text); }
-        .copy-btn:hover { background: var(--bg); }
-
-        /* --- CATEGORY GRID --- */
-        .grid-title { margin-bottom: 15px; font-size: 1.2rem; }
-        .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-bottom: 40px; }
-        .cat-card { background: var(--surface); padding: 20px; border-radius: 8px; border: 1px solid var(--border); text-align: center; cursor: pointer; transition: transform 0.2s; }
-        .cat-card:hover { transform: translateY(-3px); border-color: var(--primary); }
-        .cat-icon { font-size: 1.5rem; margin-bottom: 10px; display: block; }
-
-        /* --- SIDEBAR (HISTORY) --- */
-        .sidebar h3 { margin-bottom: 15px; font-size: 1.1rem; }
-        .history-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-        .history-item { background: var(--bg); padding: 10px; border-radius: 6px; border-left: 3px solid var(--primary); cursor: pointer; font-size: 0.9rem; }
-        .history-item:hover { background: var(--border); }
-        .history-meta { font-size: 0.75rem; color: var(--text-light); display: block; margin-top: 4px; }
-
-        /* --- FOOTER --- */
-        footer { background: var(--surface); border-top: 1px solid var(--border); padding: 20px; text-align: center; margin-top: auto; color: var(--text-light); font-size: 0.9rem; }
-
-        @media(max-width: 768px) {
-            .input-group { grid-template-columns: 1fr; }
-            .swap-btn { margin: 0 auto; transform: rotate(90deg); }
-            .swap-btn:hover { transform: rotate(270deg); }
-            .smart-search { width: 100%; display: none; /* Hide generic search on mobile for simplicity */ }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569; 
+            border-radius: 4px;
         }
     </style>
 </head>
-<body data-theme="light">
+<body class="flex flex-col">
 
-    <header>
-        <div class="nav-flex">
-            <a href="#" class="logo">Quik Converter</a>
-            
-            <div class="smart-search">
-                <input type="text" id="smartSearch" placeholder="Type '100 km to miles' or '50c to f'...">
-            </div>
-
-            <div style="display: flex; gap: 15px; align-items: center;">
-                <button class="theme-toggle" id="themeBtn">🌙</button>
-            </div>
+    <div class="w-full bg-slate-900 border-b border-slate-800 text-xs py-2 px-6 flex justify-between items-center z-50">
+        <div class="flex gap-4 text-slate-400">
+            <span>&copy; 2025 QUIK CONVERTER</span>
+            <span class="hidden md:inline">|</span>
+            <span>Owned by Quik Holdings DAO</span>
         </div>
-    </header>
-
-    <div class="container">
-        <main class="main-content">
-            
-            <div class="express-section">
-                <div class="tabs" id="categoryTabs">
-                    </div>
-
-                <div class="converter-ui">
-                    <div class="input-group">
-                        <div>
-                            <label style="font-size: 0.8rem; color: var(--text-light);">Amount</label>
-                            <input type="number" id="inputVal" value="1" placeholder="Enter value">
-                        </div>
-                        
-                        <button class="swap-btn" id="swapBtn" title="Swap Units">⇄</button>
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%;">
-                            <div>
-                                <label style="font-size: 0.8rem; color: var(--text-light);">From</label>
-                                <select id="fromUnit"></select>
-                            </div>
-                            <div>
-                                <label style="font-size: 0.8rem; color: var(--text-light);">To</label>
-                                <select id="toUnit"></select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="result-area">
-                        <div class="result-value" id="resultDisplay">---</div>
-                        <div class="result-context" id="contextDisplay"></div>
-                        
-                        <div class="copy-actions">
-                            <button class="copy-btn" onclick="copyResult('text')">Copy Text</button>
-                            <button class="copy-btn" onclick="copyResult('json')">Copy JSON</button>
-                            <button class="copy-btn" onclick="copyResult('eq')">Copy Equation</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <h2 class="grid-title">All Converters</h2>
-            <div class="category-grid" id="gridContainer">
-                </div>
-
-        </main>
-
-        <aside class="sidebar">
-            <h3>Recent Conversions</h3>
-            <ul class="history-list" id="historyList">
-                </ul>
-            
-            <hr style="border: 0; border-top: 1px solid var(--border); margin: 20px 0;">
-            
-            <h3>Developer Tools</h3>
-            <div class="category-grid" style="grid-template-columns: 1fr;">
-                <div class="cat-card" onclick="setCategory('data')">💾 Byte Converter</div>
-                <div class="cat-card" onclick="setCategory('pixel')">🎨 Px to REM</div>
-            </div>
-        </aside>
+        <div class="text-cyan-400 font-semibold tracking-wide">
+            <i class="fa-solid fa-envelope mr-2"></i> quikconverter1@gmail.com
+        </div>
     </div>
 
-    <footer>
-        <p>&copy; 2023 Quik Converter. Designed for efficiency.</p>
+    <nav class="w-full py-6 px-6 md:px-12 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                <i class="fa-solid fa-arrow-right-arrow-left text-white text-lg"></i>
+            </div>
+            <h1 class="text-2xl md:text-3xl font-bold tracking-tighter text-white">
+                QUIK <span class="text-cyan-400">CONVERTER</span>
+            </h1>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <button class="hidden md:flex items-center gap-2 text-sm text-slate-300 hover:text-white transition">
+                Gas: <span class="text-green-400">12 Gwei</span>
+            </button>
+            <button onclick="alert('Connecting to MetaMask... (Simulation)')" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white px-5 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-cyan-500/10">
+                <i class="fa-solid fa-wallet"></i> Connect Wallet
+            </button>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        
+        <div class="max-w-4xl mx-auto">
+            
+            <div class="flex justify-center mb-8 gap-4">
+                <button class="px-6 py-2 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/50 font-semibold shadow-lg shadow-cyan-500/10">
+                    <i class="fa-solid fa-ruler-combined mr-2"></i> Standard Units
+                </button>
+                <button class="px-6 py-2 rounded-full glass-panel text-slate-400 hover:text-white hover:border-slate-500 transition">
+                    <i class="fa-brands fa-ethereum mr-2"></i> Crypto Swap
+                </button>
+            </div>
+
+            <div class="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+
+                <h2 class="text-3xl font-bold mb-8 text-center gradient-text">Universal Converter Express</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-7 gap-4 items-center mb-8">
+                    
+                    <div class="col-span-3">
+                        <label class="block text-slate-400 text-sm mb-2 font-medium">From</label>
+                        <div class="relative">
+                            <input type="number" id="fromVal" value="1" oninput="calculate()" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-4 text-white text-xl focus:outline-none focus:border-cyan-500 transition">
+                            <select id="calFrom" onchange="calculate()" class="absolute right-2 top-2 bottom-2 bg-slate-800 text-white text-sm rounded-lg px-3 border border-slate-700 outline-none cursor-pointer hover:bg-slate-700">
+                                <option value="1">Meter (m)</option>
+                                <option value="1000">Kilometer (km)</option>
+                                <option value="0.01">Centimeter (cm)</option>
+                                <option value="0.3048">Foot (ft)</option>
+                                <option value="0.0254">Inch (in)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-span-1 flex justify-center">
+                        <button class="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-cyan-400 hover:rotate-180 transition-transform duration-500">
+                            <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                        </button>
+                    </div>
+
+                    <div class="col-span-3">
+                        <label class="block text-slate-400 text-sm mb-2 font-medium">To</label>
+                        <div class="relative">
+                            <input type="number" id="toVal" readonly class="w-full bg-slate-900/80 border border-slate-700 rounded-xl p-4 text-cyan-400 font-bold text-xl focus:outline-none">
+                            <select id="calTo" onchange="calculate()" class="absolute right-2 top-2 bottom-2 bg-slate-800 text-white text-sm rounded-lg px-3 border border-slate-700 outline-none cursor-pointer hover:bg-slate-700">
+                                <option value="1">Meter (m)</option>
+                                <option value="1000">Kilometer (km)</option>
+                                <option value="0.01">Centimeter (cm)</option>
+                                <option value="0.3048" selected>Foot (ft)</option>
+                                <option value="0.0254">Inch (in)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center text-slate-500 text-sm">
+                    <i class="fa-solid fa-circle-info mr-1"></i> Real-time exchange rates updated via Oracle
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto mt-16">
+            <h3 class="text-xl text-white font-semibold mb-6 border-l-4 border-cyan-500 pl-4">Popular Conversions</h3>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="glass-panel p-5 rounded-xl hover:bg-slate-800/50 transition cursor-pointer group">
+                    <div class="text-cyan-400 text-2xl mb-3 group-hover:scale-110 transition-transform"><i class="fa-solid fa-temperature-half"></i></div>
+                    <h4 class="text-white font-medium mb-1">Temperature</h4>
+                    <p class="text-xs text-slate-500">C, F, Kelvin</p>
+                </div>
+
+                <div class="glass-panel p-5 rounded-xl hover:bg-slate-800/50 transition cursor-pointer group">
+                    <div class="text-cyan-400 text-2xl mb-3 group-hover:scale-110 transition-transform"><i class="fa-solid fa-weight-hanging"></i></div>
+                    <h4 class="text-white font-medium mb-1">Weight & Mass</h4>
+                    <p class="text-xs text-slate-500">Kg, Lbs, Oz</p>
+                </div>
+
+                <div class="glass-panel p-5 rounded-xl hover:bg-slate-800/50 transition cursor-pointer group">
+                    <div class="text-cyan-400 text-2xl mb-3 group-hover:scale-110 transition-transform"><i class="fa-solid fa-cube"></i></div>
+                    <h4 class="text-white font-medium mb-1">Volume</h4>
+                    <p class="text-xs text-slate-500">Litres, Gallons</p>
+                </div>
+
+                <div class="glass-panel p-5 rounded-xl hover:bg-slate-800/50 transition cursor-pointer group">
+                    <div class="text-purple-400 text-2xl mb-3 group-hover:scale-110 transition-transform"><i class="fa-solid fa-database"></i></div>
+                    <h4 class="text-white font-medium mb-1">Data Storage</h4>
+                    <p class="text-xs text-slate-500">GB, TB, Petabyte</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto mt-12 pb-12">
+            <h3 class="text-xl text-white font-semibold mb-6 border-l-4 border-purple-500 pl-4">Advanced Converters</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm text-slate-400">
+                <ul class="space-y-2">
+                    <li class="uppercase text-xs font-bold text-slate-500 mb-2">Engineering</li>
+                    <li><a href="#" class="hover:text-cyan-400 transition">Acceleration Converter</a></li>
+                    <li><a href="#" class="hover:text-cyan-400 transition">Torque Converter</a></li>
+                    <li><a href="#" class="hover:text-cyan-400 transition">Pressure Converter</a></li>
+                    <li><a href="#" class="hover:text-cyan-400 transition">Moment of Inertia</a></li>
+                </ul>
+                <ul class="space-y-2">
+                    <li class="uppercase text-xs font-bold text-slate-500 mb-2">Fluids & Heat</li>
+                    <li><a href="#" class="hover:text-cyan-400 transition">Flow Rate Converter</a></li>
+                    <li><a href="#" class="hover:text-cyan-400 transition">Viscosity Converter</a></li>
+                    <li><a href="#" class="hover:text-cyan-400 transition">Thermal Conductivity</a></li>
+                    <li><a href="#" class="hover:text-cyan-400 transition">Fuel Efficiency</a></li>
+                </ul>
+                <ul class="space-y-2">
+                    <li class="uppercase text-xs font-bold text-slate-500 mb-2">Electricity</li>
+                    <li><a href="#" class="hover:text-cyan-400 transition">Charge Converter</a></li>
+                    <li><a href="#" class="hover:text-cyan-400 transition">Inductance Converter</a></li>
+                    <li><a href="#" class="hover:text-cyan-400 transition">Electric Field Strength</a></li>
+                    <li><a href="#" class="hover:text-cyan-400 transition">Surface Current Density</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="border-t border-slate-800 bg-slate-900/50 py-8">
+        <div class="container mx-auto px-6 text-center text-slate-500 text-sm">
+            <p class="mb-4">
+                <a href="#" class="hover:text-white mx-2">About Us</a> | 
+                <a href="#" class="hover:text-white mx-2">Terms of Use</a> | 
+                <a href="#" class="hover:text-white mx-2">Privacy Policy</a> | 
+                <a href="#" class="hover:text-white mx-2">Smart Contracts</a>
+            </p>
+            <p>
+                QUIK CONVERTER provides tools for convenient conversion between standard units and decentralized assets.
+            </p>
+        </div>
     </footer>
 
     <script>
-        // --- 1. DATA STRUCTURE ---
-        // A scalable map of categories, units, and conversion factors (normalized to base unit)
-        const DATA = {
-            length: {
-                name: "Length",
-                icon: "📏",
-                base: "m", // meter
-                units: {
-                    m: { name: "Meter", factor: 1 },
-                    km: { name: "Kilometer", factor: 1000 },
-                    cm: { name: "Centimeter", factor: 0.01 },
-                    mm: { name: "Millimeter", factor: 0.001 },
-                    mi: { name: "Mile", factor: 1609.34 },
-                    yd: { name: "Yard", factor: 0.9144 },
-                    ft: { name: "Foot", factor: 0.3048 },
-                    in: { name: "Inch", factor: 0.0254 },
-                    ly: { name: "Light Year", factor: 9.461e15 }
-                }
-            },
-            weight: {
-                name: "Weight",
-                icon: "⚖️",
-                base: "g", // gram
-                units: {
-                    g: { name: "Gram", factor: 1 },
-                    kg: { name: "Kilogram", factor: 1000 },
-                    mg: { name: "Milligram", factor: 0.001 },
-                    lb: { name: "Pound", factor: 453.592 },
-                    oz: { name: "Ounce", factor: 28.3495 }
-                }
-            },
-            volume: {
-                name: "Volume",
-                icon: "💧",
-                base: "l",
-                units: {
-                    l: { name: "Liter", factor: 1 },
-                    ml: { name: "Milliliter", factor: 0.001 },
-                    gal: { name: "Gallon (US)", factor: 3.78541 },
-                    cup: { name: "Cup (US)", factor: 0.236588 }
-                }
-            },
-            temp: {
-                name: "Temperature",
-                icon: "🌡️",
-                isComplex: true, // Requires formulas, not simple factors
-                units: {
-                    c: { name: "Celsius" },
-                    f: { name: "Fahrenheit" },
-                    k: { name: "Kelvin" }
-                }
-            },
-            data: {
-                name: "Data Storage",
-                icon: "💾",
-                base: "b", // bit
-                units: {
-                    b: { name: "Bit", factor: 1 },
-                    B: { name: "Byte", factor: 8 },
-                    KB: { name: "Kilobyte", factor: 8192 },
-                    MB: { name: "Megabyte", factor: 8.389e6 },
-                    GB: { name: "Gigabyte", factor: 8.59e9 },
-                    TB: { name: "Terabyte", factor: 8.796e12 }
-                }
-            },
-            pixel: {
-                name: "Web Layout",
-                icon: "💻",
-                base: "px",
-                units: {
-                    px: { name: "Pixel (Base 16)", factor: 1 },
-                    rem: { name: "REM (Root 16px)", factor: 16 }
-                }
-            }
-        };
-
-        // --- 2. STATE MANAGEMENT ---
-        let currentCategory = 'length';
-        let history = JSON.parse(localStorage.getItem('quikHistory')) || [];
-
-        // --- 3. DOM ELEMENTS ---
-        const tabsContainer = document.getElementById('categoryTabs');
-        const fromSelect = document.getElementById('fromUnit');
-        const toSelect = document.getElementById('toUnit');
-        const inputVal = document.getElementById('inputVal');
-        const resultDisplay = document.getElementById('resultDisplay');
-        const contextDisplay = document.getElementById('contextDisplay');
-        const gridContainer = document.getElementById('gridContainer');
-        const themeBtn = document.getElementById('themeBtn');
-        const historyList = document.getElementById('historyList');
-
-        // --- 4. INITIALIZATION ---
-        function init() {
-            renderTabs();
-            renderGrid();
-            renderHistory();
-            setCategory('length');
-            
-            // Event Listeners
-            inputVal.addEventListener('input', calculate);
-            fromSelect.addEventListener('change', calculate);
-            toSelect.addEventListener('change', calculate);
-            document.getElementById('swapBtn').addEventListener('click', swapUnits);
-            
-            // Theme logic
-            if(localStorage.getItem('theme') === 'dark') document.body.dataset.theme = 'dark';
-            themeBtn.addEventListener('click', toggleTheme);
-
-            // Smart Search Listener
-            document.getElementById('smartSearch').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') handleSearch(e.target.value);
-            });
-        }
-
-        // --- 5. CORE LOGIC ---
-
-        function setCategory(catKey) {
-            currentCategory = catKey;
-            
-            // Update Tabs UI
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            const activeTab = document.querySelector(`.tab[data-key="${catKey}"]`);
-            if(activeTab) activeTab.classList.add('active');
-
-            // Populate Select Dropdowns
-            const catData = DATA[catKey];
-            fromSelect.innerHTML = '';
-            toSelect.innerHTML = '';
-
-            Object.keys(catData.units).forEach(unitKey => {
-                const unit = catData.units[unitKey];
-                const option1 = new Option(unit.name, unitKey);
-                const option2 = new Option(unit.name, unitKey);
-                fromSelect.add(option1);
-                toSelect.add(option2);
-            });
-
-            // Set defaults (first and second items usually)
-            const keys = Object.keys(catData.units);
-            fromSelect.value = keys[0];
-            toSelect.value = keys[1] || keys[0];
-
-            calculate();
-        }
-
         function calculate() {
-            const val = parseFloat(inputVal.value);
-            const from = fromSelect.value;
-            const to = toSelect.value;
-            const cat = DATA[currentCategory];
-
-            if (isNaN(val)) {
-                resultDisplay.innerText = "---";
-                contextDisplay.innerText = "";
-                return;
-            }
-
-            let result = 0;
-
-            if (cat.isComplex && currentCategory === 'temp') {
-                // Temperature Formulas
-                if(from === to) result = val;
-                else if(from === 'c' && to === 'f') result = (val * 9/5) + 32;
-                else if(from === 'c' && to === 'k') result = val + 273.15;
-                else if(from === 'f' && to === 'c') result = (val - 32) * 5/9;
-                else if(from === 'f' && to === 'k') result = (val - 32) * 5/9 + 273.15;
-                else if(from === 'k' && to === 'c') result = val - 273.15;
-                else if(from === 'k' && to === 'f') result = (val - 273.15) * 9/5 + 32;
-            } else {
-                // Standard Factor Conversion (Base Unit Method)
-                // Value * (FromFactor / ToFactor)
-                const fromFactor = cat.units[from].factor;
-                const toFactor = cat.units[to].factor;
-                result = val * (fromFactor / toFactor);
-            }
-
-            // Formatting logic: Integers vs Decimals
-            const displayRes = Number.isInteger(result) ? result : parseFloat(result.toFixed(4));
+            // Get Elements
+            const fromVal = parseFloat(document.getElementById('fromVal').value);
+            const fromFactor = parseFloat(document.getElementById('calFrom').value);
+            const toFactor = parseFloat(document.getElementById('calTo').value);
             
-            resultDisplay.innerText = `${displayRes} ${cat.units[to].name}`;
+            // Basic Logic: (Value * FromFactor) / ToFactor
+            // Note: In a real deployment, this would need a massive database of factors.
+            // This is a simplified demo for Length (Meters as base).
             
-            // Trigger Visual Context
-            generateContext(displayRes, to, currentCategory);
-
-            // Add to History (Debounced ideally, but simple here)
-            addToHistory(val, from, displayRes, to);
-        }
-
-        // --- 6. VISUAL CONTEXT (The "Aha!" Moment) ---
-        function generateContext(val, unit, type) {
-            let text = "";
-            
-            // Simple heuristic rules
-            if(type === 'length' && unit === 'm') {
-                if(val > 800) text = "🧱 That's nearly the height of the Burj Khalifa!";
-                else if(val > 300) text = "🗼 That's about the height of the Eiffel Tower.";
-                else if(val > 1.9 && val < 2.2) text = "🏋️ You are taller than The Rock (Dwayne Johnson).";
-            } 
-            else if(type === 'weight' && unit === 'kg') {
-                if(val > 5000) text = "🐘 That's about the weight of an African Elephant.";
-                else if(val > 80 && val < 100) text = "💪 Standard heavyweight boxer range.";
-            }
-            else if(type === 'temp' && unit === 'c') {
-                if(val === 100) text = "☕ Water is boiling!";
-                if(val === 0) text = "🧊 Water is freezing.";
-                if(val > 56) text = "🥵 Hottest recorded temperature on Earth.";
-            }
-            else if(type === 'pixel' && unit === 'rem') {
-                text = "🖥️ Standard accessible scaling for web typography.";
-            }
-
-            contextDisplay.innerText = text;
-        }
-
-        // --- 7. UTILITIES ---
-
-        function swapUnits() {
-            const temp = fromSelect.value;
-            fromSelect.value = toSelect.value;
-            toSelect.value = temp;
-            calculate();
-        }
-
-        function renderTabs() {
-            tabsContainer.innerHTML = '';
-            Object.keys(DATA).forEach(key => {
-                const tab = document.createElement('div');
-                tab.className = 'tab';
-                tab.dataset.key = key;
-                tab.innerText = DATA[key].name;
-                tab.onclick = () => setCategory(key);
-                tabsContainer.appendChild(tab);
-            });
-        }
-
-        function renderGrid() {
-            gridContainer.innerHTML = '';
-            Object.keys(DATA).forEach(key => {
-                const card = document.createElement('div');
-                card.className = 'cat-card';
-                card.innerHTML = `<span class="cat-icon">${DATA[key].icon}</span>${DATA[key].name}`;
-                card.onclick = () => {
-                    setCategory(key);
-                    window.scrollTo({top: 0, behavior: 'smooth'});
-                };
-                gridContainer.appendChild(card);
-            });
-        }
-
-        function addToHistory(inVal, inUnit, outVal, outUnit) {
-            // Prevent duplicates or empty
-            const entry = `${inVal} ${inUnit} → ${outVal} ${outUnit}`;
-            if (history.length > 0 && history[0].text === entry) return;
-
-            history.unshift({ text: entry, time: new Date().toLocaleTimeString() });
-            if(history.length > 10) history.pop();
-            
-            localStorage.setItem('quikHistory', JSON.stringify(history));
-            renderHistory();
-        }
-
-        function renderHistory() {
-            historyList.innerHTML = '';
-            history.forEach(h => {
-                const li = document.createElement('li');
-                li.className = 'history-item';
-                li.innerHTML = `
-                    <div>${h.text}</div>
-                    <span class="history-meta">${h.time}</span>
-                `;
-                li.onclick = () => {
-                    // Smart restore logic could go here (parsing the string back to inputs)
-                    alert("Restoring from history: " + h.text); 
-                };
-                historyList.appendChild(li);
-            });
-        }
-
-        function handleSearch(query) {
-            // Very basic regex parser for "100 m to km"
-            const regex = /(\d+)\s*(\w+)\s*(?:to|in)\s*(\w+)/i;
-            const match = query.match(regex);
-            
-            if(match) {
-                const amount = match[1];
-                const fromU = match[2].toLowerCase();
-                const toU = match[3].toLowerCase();
-
-                // Find which category these units belong to
-                let foundCat = null;
-                Object.keys(DATA).forEach(catKey => {
-                    const units = Object.keys(DATA[catKey].units);
-                    // Loose check (checking keys, ideally check names too)
-                    if(units.includes(fromU) || units.includes(toU)) foundCat = catKey;
-                });
-
-                if(foundCat) {
-                    setCategory(foundCat);
-                    // Wait for DOM update
-                    setTimeout(() => {
-                        inputVal.value = amount;
-                        // Try to set selects if they exist in the list
-                        if(fromSelect.querySelector(`option[value="${fromU}"]`)) fromSelect.value = fromU;
-                        if(toSelect.querySelector(`option[value="${toU}"]`)) toSelect.value = toU;
-                        calculate();
-                    }, 50);
-                } else {
-                    alert("Could not auto-detect units. Please select a category manually.");
+            if (!isNaN(fromVal)) {
+                let result = (fromVal * fromFactor) / toFactor;
+                
+                // Format nicely
+                if (result % 1 !== 0) {
+                    result = result.toFixed(4);
                 }
-            }
-        }
-
-        function toggleTheme() {
-            const body = document.body;
-            if(body.dataset.theme === 'dark') {
-                body.dataset.theme = 'light';
-                themeBtn.innerText = '🌙';
-                localStorage.setItem('theme', 'light');
+                document.getElementById('toVal').value = result;
             } else {
-                body.dataset.theme = 'dark';
-                themeBtn.innerText = '☀️';
-                localStorage.setItem('theme', 'dark');
+                document.getElementById('toVal').value = "";
             }
         }
 
-        function copyResult(type) {
-            const val = resultDisplay.innerText;
-            let txt = "";
-            
-            if(type === 'text') txt = val;
-            if(type === 'json') {
-                txt = JSON.stringify({
-                    from: fromSelect.value,
-                    to: toSelect.value,
-                    input: inputVal.value,
-                    result: val
-                });
-            }
-            if(type === 'eq') txt = `${inputVal.value} ${fromSelect.value} = ${val}`;
-
-            navigator.clipboard.writeText(txt).then(() => {
-                const original = resultDisplay.style.color;
-                resultDisplay.style.color = "var(--accent-green)";
-                setTimeout(() => resultDisplay.style.color = original, 500);
-            });
-        }
-
-        // Start
-        init();
-
+        // Initialize
+        calculate();
     </script>
 </body>
 </html>
